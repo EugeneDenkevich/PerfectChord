@@ -1,0 +1,11 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: "check-ast" # проверяет, что файлы *.py содержат корректный Python код.
+      - id: "trailing-whitespace" # обрезает лишние пробелы в конце строк.
+      - id: "check-case-conflict" # проверка имён файлов на case конфликты, присущие различным ОС.
+      - id: "end-of-file-fixer" # файлы должны заканчиваться только на перевод корретки.
+      - id: "mixed-line-ending" # окончания строк в файле должны быть одинаковые (LF или CRLF - чего больше, то и будет).
+      - id: "detect-private-key" # в коммите не должно быть private ключа.
+      - id: "check-toml" # проверка синтаксиса toml файлов.
