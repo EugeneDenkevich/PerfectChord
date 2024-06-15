@@ -14,13 +14,13 @@ class DBGateway(ABC):
     @abstractmethod
     async def save_song(self, title: str, author: str | UUID, body: Body) -> Song:
         ...
-    
+
     @abstractmethod
     async def get_user_by_id(self, user_id: UUID) -> Song:
         ...
 
 
-def build_db_gateway():
+def build_db_gateway() -> PostgresGateway:
     return PostgresGateway()
 
 
