@@ -1,9 +1,27 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from backend.domain.base import Base
 
 
-class Song(BaseModel):
-    """Модель песни"""
+class User(Base):
+    """Пользователь"""
 
-    name: str = Field(max_length=100)
-    text: str # TODO Продолжить расписывать модель песни (читать доку Pydantic).
-              # TODO Продумать отношения текста и аккордов.
+    username: str = Field(max_length=100)
+    email: str = Field(max_length=100)
+    password_hashed: str = Field(max_length=100)
+    is_admin: bool = False
+
+
+class Body(Base):
+    """Тело песни"""
+
+    text: str
+    chords: dict[int, str]
+
+
+class Song(Base):
+    """Песня"""
+
+    title: str = Field(max_length=100)
+    author: str | User
+    body: Body
