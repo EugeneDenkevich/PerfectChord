@@ -1,10 +1,7 @@
-from typing import Annotated
 from uuid import UUID
 
-from fastapi import Depends
-
 from backend.domain.models import Song
-from backend.gateways.db import NoSQLGateway, NoSQLGatewayD, SQLGateway, SQLGatewayD
+from backend.gateways.db.builders import NoSQLGateway, SQLGateway
 
 
 class AddSongUseCase:
@@ -32,13 +29,3 @@ class AddSongUseCase:
             ),
             body=body,
         )
-
-
-def build_add_song_usecase(
-    sql_gateway: SQLGatewayD,
-    nosql_gateway: NoSQLGatewayD,
-) -> AddSongUseCase:
-    return AddSongUseCase(sql_gateway=sql_gateway, nosql_gateway=nosql_gateway)
-
-
-AddSongUseCaseD = Annotated[AddSongUseCase, Depends(build_add_song_usecase)]
