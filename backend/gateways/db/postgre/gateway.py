@@ -1,12 +1,11 @@
 from uuid import UUID
 
-from backend.domain.models import Body, Song
-from backend.gateways.db.gateway import DBGateway
+from backend.domain.models import Song
+from backend.gateways.db.sql_gateway import SQLGateway
 
 
-class PostgresGateway(DBGateway):
-    async def save_song(self, title: str, author: str | UUID, body: Body) -> Song:  # type: ignore[empty-body]
-        ...
+class PostgreGateway(SQLGateway):
+    """Реализвация интерфейса гейтвея для работы с PostgreSQL"""
 
     async def get_user_by_id(self, user_id: UUID) -> Song:  # type: ignore[empty-body]
         ...

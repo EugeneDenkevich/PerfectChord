@@ -1,24 +1,44 @@
+from typing import Annotated
 from uuid import UUID
 
-from backend.domain.models import Body, Song
-from backend.gateways.db.gateway import DBGateway
+from fastapi import Depends
+
+from backend.domain.models import Song
+from backend.gateways.db import NoSQLGateway, NoSQLGatewayD, SQLGateway, SQLGatewayD
 
 
 class AddSongUseCase:
-    """Юзер кейс добавления новой песни"""
+    """Добавление новой песни"""
 
     def __init__(
         self,
-        db_gateway: DBGateway,
+        sql_gateway: SQLGateway,
+        nosql_gateway: NoSQLGateway,
     ) -> None:
-        self.db_gateway = db_gateway
+        self.sql_gateway = sql_gateway
+        self.nosql_gateway = nosql_gateway
 
-    async def __call__(self, title: str, author: str | UUID, body: Body) -> Song:
-        return await self.db_gateway.save_song(
+    async def __call__(
+        self,
+        title: str,
+        author: str | UUID,
+        body: dict[int, str],
+    ) -> Song:
+        return await self.nosql_gateway.save_song(
             title=title,
             author=(
-                await self.db_gateway.get_user_by_id(user_id=author)
+                await self.sql_gateway.get_user_by_id(user_id=author)
                 if isinstance(author, UUID) else author
             ),
             body=body,
         )
+
+
+def build_add_song_usecase(
+    sql_gateway: SQLGatewayD,
+    nosql_gateway: NoSQLGatewayD,
+) -> AddSongUseCase:
+    return AddSongUseCase(sql_gateway=sql_gateway, nosql_gateway=nosql_gateway)
+
+
+AddSongUseCaseD = Annotated[AddSongUseCase, Depends(build_add_song_usecase)]
