@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 from typing import Annotated
 from uuid import UUID, uuid4
 
-from pydantic import BaseModel, EmailStr, Field, model_validator
+from pydantic import BaseModel, Field, model_validator
 
 
 def datetime_now() -> datetime:
@@ -28,21 +28,3 @@ class Base(BaseModel):
         obj.updated_at = datetime_now()
         obj.model_config["validate_assignment"] = True
         return obj
-
-
-class User(Base):
-    """Пользователь"""
-
-    username: str = Field(max_length=100)
-    email: EmailStr
-    password_hashed: str = Field(max_length=100)
-    is_admin: bool = False
-
-
-class Song(Base):
-    """Песня"""
-
-    title: str = Field(max_length=100)
-    author: str | User
-    text: str
-    chords: dict[int, str]

@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from backend.domain.models import Song
+from backend.domain.song.models import Song
 from backend.gateways.db.builders import NoSQLGateway
 
 
