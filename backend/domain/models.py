@@ -21,7 +21,7 @@ class Base(BaseModel):
     class Config:
         validate_assignment = True
 
-    @model_validator(mode="after")
+    @model_validator(mode="after")  # type: ignore[arg-type]
     @classmethod
     def update_updated_at(cls, obj: "Base") -> "Base":
         obj.model_config["validate_assignment"] = False
