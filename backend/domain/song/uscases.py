@@ -1,3 +1,4 @@
+from typing import List
 from uuid import UUID
 
 from backend.domain.song.models import Song
@@ -53,9 +54,9 @@ class GetSongsUseCase:
 
     async def __call__(
         self,
-        limit: int,
-        offset: int,
-    ) -> Song:
+        limit: int | None,
+        offset: int | None,
+    ) -> List[Song]:
         return await self.nosql_gateway.get_songs(limit=limit, offset=offset)
 
 
@@ -71,9 +72,9 @@ class UpdateSongUseCase:
     async def __call__(
         self,
         song_id: UUID,
-        title: str,
-        author: str | UUID,
-        body: dict[int, str],
+        title: str | None,
+        author: str | UUID | None,
+        body: dict[int, str] | None,
     ) -> Song:
         return await self.nosql_gateway.update(
             song_id=song_id,
@@ -95,5 +96,5 @@ class DeleteSongUseCase:
     async def __call__(
         self,
         song_id: UUID,
-    ) -> Song:
-        return await self.nosql_gateway.delete_song_by_id(song_id=song_id)
+    ) -> None:
+        await self.nosql_gateway.delete_song_by_id(song_id=song_id)
