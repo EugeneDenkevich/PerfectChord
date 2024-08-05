@@ -1,0 +1,46 @@
+version: '3'
+
+output: 'prefixed'
+
+tasks:
+
+  run:
+    aliases:
+      - r
+    cmds:
+      - docker compose up --build -d {{.CLI_ARGS}}
+    desc: run docker compose
+    interactive: true
+
+  down:
+    aliases:
+      - d
+    cmds:
+      - docker compose down --remove-orphans {{.CLI_ARGS}} || exit 0
+    desc: stop docker compose
+    dir: "{{.ROOT_DIR}}"
+    interactive: true
+
+  log:
+    aliases:
+      - l
+    cmds:
+      - docker logs -f {{.CLI_ARGS}}
+    desc: show logs from api container
+    interactive: true
+
+  test:
+    aliases:
+      - t
+    cmds:
+      - pytest {{.CLI_ARGS}}
+    desc: run tests
+    interactive: true
+
+  migr:
+    aliases:
+      - m
+    cmds:
+      - docker compose exec -it pc_api  poetry run alembic revision --autogenerate -m {{.CLI_ARGS}}
+    desc: create migration
+    interactive: true
