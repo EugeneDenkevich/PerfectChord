@@ -1,55 +1,39 @@
-
-from typing import List
+from typing import List, Union
 from uuid import UUID
 
+from backend.domain.user.exceptions import EmailExistsError, UsernameExistsError
 from backend.domain.user.models import User
+from backend.domain.user.services import UserService
 from backend.gateways.db.builders import SQLGateway
 
 
-def hash_password_or_none(password: str | None) -> str | None:
-    if password:
-        return hash_password(password)
-    return None
-
-
-def hash_password(password: str) -> str:
-    # TODO Посмотреть реализацию в Mercury
-    return password[::-1]
-
-
-class AddUserUseCase:
+class CreateUserUseCase:
     """Добавление нового пользователя"""
 
     def __init__(
         self,
         sql_gateway: SQLGateway,
+        user_service: UserService,
     ) -> None:
         self.sql_gateway = sql_gateway
+        self.user_service = user_service
 
     async def __call__(
         self,
+        username: str,
         email: str,
         password: str,
     ) -> User:
-        return await self.sql_gateway.save_user(
+        if await self.sql_gateway.get_user_or_none(email=email):
+            raise EmailExistsError()
+        if await self.sql_gateway.get_user_or_none(username=username):
+            raise UsernameExistsError()
+        user = self.user_service.create(
+            username=username,
             email=email,
-            hashed_password=hash_password(password),
+            password=password,
         )
-
-
-class GetUserByIdUseCase:
-    """Получение нового пользователя по его id"""
-
-    def __init__(
-        self,
-        sql_gateway: SQLGateway,
-    ) -> None:
-        self.sql_gateway = sql_gateway
-
-    async def __call__(self, user_id: UUID) -> User:
-        return await self.sql_gateway.get_user_by_id(
-            user_id=user_id,
-        )
+        return await self.sql_gateway.save_user(user)
 
 
 class GetUsersUseCase:
@@ -63,11 +47,10 @@ class GetUsersUseCase:
 
     async def __call__(
         self,
-        limit: int | None,
-        offset: int | None,
+        limit: Union[int, None],
+        offset: Union[int, None],
     ) -> List[User]:
         return await self.sql_gateway.get_users(limit=limit, offset=offset)
-
 
 class UpdateUserUseCase:
     """Обновление пользователя"""
@@ -87,7 +70,7 @@ class UpdateUserUseCase:
         return await self.sql_gateway.update_user(
             user_id=user_id,
             email=email,
-            hashed_password=hash_password_or_none(password),
+            hashed_password=password,
         )
 
 

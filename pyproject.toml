@@ -1,15 +1,27 @@
 [tool.poetry]
-name = "perfect-chord"
+name = "perfect_chord"
 version = "0.1.0"
 description = "Web application for easy reading of chords when playing"
 authors = ["Eugene Denkevich <e.denkevich@data-light.ru>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "3.11.5"
+python = "^3.11.5"
 pydantic = "2.7.3"
 fastapi = "0.111.0"
 email-validator = "2.1.1"
+passlib = "1.7.4"
+uvicorn = "0.30.5"
+gunicorn = "22.0.0"
+loguru = "0.7.2"
+pydantic-settings = "2.4.0"
+sqlalchemy = "2.0.31"
+alembic = "1.13.2"
+asyncpg = "0.29.0"
+pyjwt = "2.9.0"
+python-dateutil = "2.9.0"
+types-python-dateutil = "2.8.19.20240106"
+cryptography = "43.0.0"
 
 [tool.poetry.group.linters.dependencies]
 pre-commit = "3.7.1"
@@ -33,7 +45,7 @@ warn_unused_ignores = false
 warn_return_any = false
 namespace_packages = true
 exclude = [
-    "example/",
+    "backend/infrastructure/postgresql/migrations/versions/",
 ]
 
 [tool.ruff]

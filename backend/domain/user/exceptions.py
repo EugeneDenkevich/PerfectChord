@@ -1,4 +1,6 @@
-class NoPasswordOrLoginError(Exception):
-    """Ошибка при отсутствии логина или пароля"""
+class EmailExistsError(Exception):
+    """Пользователь с таким email уже существует"""
 
-    message = "Не предоставлен логин или пароль"
+
+class UsernameExistsError(Exception):
+    """Пользователь с таким username уже существует"""
